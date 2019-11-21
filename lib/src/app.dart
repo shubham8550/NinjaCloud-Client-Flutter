@@ -8,7 +8,7 @@ class app extends StatelessWidget {
     // TODO: implement build
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.yellowAccent,
+        backgroundColor: Color.alphaBlend(Colors.indigo, Colors.white),
         resizeToAvoidBottomPadding: false,
         body: Login(),
       ),

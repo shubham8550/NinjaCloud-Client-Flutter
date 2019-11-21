@@ -14,6 +14,7 @@ class Login extends StatelessWidget {
   Widget centerCard() {
     return Center(
       child: Card(
+        color: Colors.black12,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
@@ -84,7 +85,7 @@ class Login extends StatelessWidget {
       builder: (BuildContext, snapshot) {
         return RaisedButton(
           child: Text('Login'),
-          color: Colors.yellowAccent,
+          color: Colors.white70,
           onPressed: snapshot.hasData
               ? () {
                   print("value submitting");
