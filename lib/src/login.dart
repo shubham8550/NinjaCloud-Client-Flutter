@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
   Widget centerCard() {
     return Center(
       child: Card(
-        color: Colors.black12,
+        color: Colors.white,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
@@ -22,7 +22,7 @@ class Login extends StatelessWidget {
           },
           child: Container(
             width: 300,
-            height: 500,
+            height: 400,
             margin: EdgeInsets.all(20),
             child: Column(
               children: <Widget>[
