@@ -21,4 +21,14 @@ class Validators {
       }
     },
   );
+
+  final validateUsername = StreamTransformer<String, String>.fromHandlers(
+    handleData: (password, sink) {
+      if (password.length > 3) {
+        sink.add(password);
+      } else {
+        sink.addError('Username must be at least 4 characters');
+      }
+    },
+  );
 }

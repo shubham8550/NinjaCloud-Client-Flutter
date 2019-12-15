@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 logoContener(),
-                emailField(),
+                usernameField(),
                 passwordField(),
                 Container(
                   margin: EdgeInsets.only(top: 25.0),
@@ -45,18 +45,17 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget emailField() {
+  Widget usernameField() {
     return StreamBuilder(
-      stream: bloc.email,
+      stream: bloc.username,
       builder: (BuildContext, snapshot) {
         return TextField(
-          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            hintText: 'you@example.com',
-            labelText: 'EMail Address',
+            hintText: 'Username',
+            labelText: 'Username',
             errorText: snapshot.error,
           ),
-          onChanged: bloc.changeEmail,
+          onChanged: bloc.changeUsername,
         );
       },
     );
