@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'bloc.dart';
 import 'dart:async';
@@ -81,14 +83,14 @@ class Login extends StatelessWidget {
   Widget submitButton() {
     return StreamBuilder(
       stream: bloc.submitValid,
-      builder: (BuildContext, snapshot) {
+      builder: (BuildContext context, snapshot) {
         return RaisedButton(
           child: Text('Login'),
           color: Colors.white70,
           onPressed: snapshot.hasData
               ? () {
                   print("value submitting");
-                  bloc.submit();
+                  bloc.submit(context);
                 }
               : null,
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ninjacloud/screen/home.dart';
 import 'package:ninjacloud/src/login.dart';
 
 
@@ -7,11 +8,28 @@ class app extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home: Scaffold(
-        //backgroundColor: Color.alphaBlend(Colors.indigo, Colors.white),
+     // home:login_page()
+     onGenerateRoute: (RouteSettings settings){
+       if(settings.name == '/home'){
+         return MaterialPageRoute(builder: (context){
+           return home_page();
+         },
+        );
+       }else{
+          return MaterialPageRoute(builder: (context){
+           return login_page();
+         },
+        );
+       }
 
+     },
+    );
+  }
+  login_page(){
+    return   Scaffold(
+        //backgroundColor: Color.alphaBlend(Colors.indigo, Colors.white),
         resizeToAvoidBottomPadding: false,
-        body: Container(
+        body:Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("graphics/animebg.gif"),
@@ -19,8 +37,11 @@ class app extends StatelessWidget {
             ),
           ),
           child: Login() /* add child content here */,
-        ),
-      ),
-    );
+        ), 
+    ); 
   }
+
+
+
+
 }

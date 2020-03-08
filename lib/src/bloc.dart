@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:ninjacloud/src/Manager.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,15 +25,17 @@ class Block extends Validators {
   Function(String) get changeUsername => _username.sink.add;
 
   Function(String) get changepassword => _password.sink.add;
-  submit()async{
+  submit(BuildContext context)async{
     final validUsername =_username.value;
     final validpassword= _password.value;
+     Navigator.pushNamed(context, '/home');
     //print('------------'+validUsername+'---'+validpassword);
     if(await loginAccount(validUsername, validpassword)==true){
       //print("Login Successsssssssssssssssssssssssss");
     }else{
       //print("Login Fiellllldddd");
     }
+   
   }
   dispose() {
     _email.close();
