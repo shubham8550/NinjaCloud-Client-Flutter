@@ -201,8 +201,8 @@ class listbody extends StatefulWidget{
       // backing data
       List<String> _data = ['Sun', 'Moon', 'Star'];
             
-      final icons = [Icons.directions_bike, Icons.directions_boat,
-        Icons.directions_bus, Icons.directions_car, Icons.directions_railway,
+      final icons = [Icons.image, Icons.video_label,
+        Icons.video_library, Icons.insert_drive_file, Icons.filter,
         Icons.directions_run, Icons.directions_subway, Icons.directions_transit,
         Icons.directions_walk];
 
@@ -210,11 +210,7 @@ class listbody extends StatefulWidget{
       Widget build(BuildContext context) {
        
        
-        return Column(
-          children: <Widget>[
-            SizedBox(
-              height: 300,
-              child: AnimatedList(
+        return AnimatedList(
                 // Give the Animated list the global key
                 key: _listKey,
                 initialItemCount: R.totalfiles,
@@ -225,22 +221,7 @@ class listbody extends StatefulWidget{
                   // share it with the _removeSingleItem() method.
                   return _buildItem((allFiles[index]).filename, animation,index);
                 },
-              ),
-            ),
-            // RaisedButton(
-            //   child: Text('Insert item', style: TextStyle(fontSize: 20)),
-            //   onPressed: () {
-            //     _insertSingleItem();
-            //   },
-            // ),
-            // RaisedButton(
-            //   child: Text('Remove item', style: TextStyle(fontSize: 20)),
-            //   onPressed: () {
-            //     _removeSingleItem();
-            //   },
-            // )
-          ],
-        );
+              );
       }
 
       // This is the animated row with the Card.
@@ -250,7 +231,7 @@ class listbody extends StatefulWidget{
           child: Card(
             child: ListTile(
               trailing: menu_items(index),
-              leading: Icon(icons[index]),
+              leading: Icon(geticon(index)),
               title: Text(
                 item,
                 style: TextStyle(fontSize: 20),
@@ -258,6 +239,23 @@ class listbody extends StatefulWidget{
             ),
           ),
         );
+      }
+      IconData geticon(int index){
+        String e=allFiles[index].ext;
+        if (e=="png" || e=="jpg" || e=="jpeg") {
+          return Icons.image;
+        } else if (e=="mp4" || e=="mkv" || e=="3gp") {
+          return Icons.video_library;
+        }if (e=="mp3") {
+          return Icons.library_music;
+        }if (e=="apk") {
+          return Icons.android;
+        }if (e=="zip" || e=="rar" || e=="tar") {
+          return Icons.archive;
+        } else {
+          return Icons.insert_drive_file;
+        }
+
       }
 
      Widget menu_items(int index){
