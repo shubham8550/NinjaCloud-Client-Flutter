@@ -9,15 +9,25 @@
 //
 // ![](https://flutter.github.io/assets-for-api-docs/assets/material/scaffold_bottom_app_bar.png)
 
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ninjacloud/filesdatamap.dart';
 import 'package:ninjacloud/resources/R.dart';
 import 'package:ninjacloud/src/Manager.dart';
-
-
+import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart' as path;
 
 class home_page extends StatefulWidget {
   home_page({Key key}) : super(key: key);
+           
+
+
+
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
@@ -26,13 +36,73 @@ class home_page extends StatefulWidget {
 class _MyStatefulWidgetState extends State<home_page> {
   int _count = 0;
 
+
+
+
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
+
+  void _onRefresh() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    
+    if(mounted)
+    setState(() {
+         getfiles(R.username);
+    });
+    _refreshController.loadComplete();
+  }
+
+
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ninja Cloud'),
+        title: Text('Ninja Cloud'), 
       ),
-      body: file_list(_count),
-
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else if(mode == LoadStatus.canLoading){
+                body = Text("release to load more");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: file_list(_count),
+        ),
+      //----body end
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Container(
@@ -40,15 +110,52 @@ class _MyStatefulWidgetState extends State<home_page> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() {
-          _count++;
-        }),
+        onPressed:()  {
+          _file_picker();
+         
+          // setState(() {
+            
+          // });
+        },
         tooltip: 'Increment Counter',
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+  _file_picker() async {
+     File file = await FilePicker.getFile();
+     print(path.dirname(file.path));
+        print((file.path));
+     
+
+    final uploader = FlutterUploader();
+
+    final taskId = await uploader.enqueue(
+        url: "http://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
+        files: [FileItem(filename:  path.basename(file.path), savedDir: path.dirname(file.path), fieldname:"uploadFile")], // required: list of files that you want to upload
+        method: UploadMethod.POST, // HTTP method  (POST or PUT or PATCH)
+        headers: {"apikey": "api_123456", "userkey": "userkey_123456","u": R.username},
+        data: {"u": R.username}, // any data you want to send in upload request
+        showNotification: true, // send local notification (android only) for upload status
+        tag: "uploading ${path.basename(file.path)}"); // unique tag for upload task
+      int i=0;
+      final subscription = uploader.progress.listen((progress)  {
+            print(progress.progress);
+            if(progress.progress==100 && i==0){
+            
+              
+              i++;
+                
+
+            }
+            }
+          
+      );
+  print("Uploader stopped");
+  }
+
+
 
   Widget file_list(int _count){
    // return Text('You have pressed the button $_count times.');
@@ -119,18 +226,18 @@ class listbody extends StatefulWidget{
                 },
               ),
             ),
-            RaisedButton(
-              child: Text('Insert item', style: TextStyle(fontSize: 20)),
-              onPressed: () {
-                _insertSingleItem();
-              },
-            ),
-            RaisedButton(
-              child: Text('Remove item', style: TextStyle(fontSize: 20)),
-              onPressed: () {
-                _removeSingleItem();
-              },
-            )
+            // RaisedButton(
+            //   child: Text('Insert item', style: TextStyle(fontSize: 20)),
+            //   onPressed: () {
+            //     _insertSingleItem();
+            //   },
+            // ),
+            // RaisedButton(
+            //   child: Text('Remove item', style: TextStyle(fontSize: 20)),
+            //   onPressed: () {
+            //     _removeSingleItem();
+            //   },
+            // )
           ],
         );
       }
@@ -154,8 +261,16 @@ class listbody extends StatefulWidget{
 
      Widget menu_items(int index){
         return PopupMenuButton<int>(
-          onSelected: (val){
+          onSelected: (val) async {
               toast('button ${val} selected of number ${index}');
+              if(val==1){
+                _launchURL(index);
+                              
+              }else if(val==2){
+                
+              }else if(val==3){
+                
+              }
           },
           itemBuilder: (context) => [
                 PopupMenuItem(
@@ -173,6 +288,19 @@ class listbody extends StatefulWidget{
               ],
         );
       }
+
+
+_launchURL(int index) async {
+  String url = allFiles[index].url;
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    toast('Could not launch $url');
+  }
+}
+
+
+
       void _insertSingleItem() {
         String newItem = "Planet";
         // Arbitrary location for demonstration purposes
