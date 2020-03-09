@@ -22,7 +22,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
-
+import 'package:http/http.dart' as http;
 class home_page extends StatefulWidget {
   home_page({Key key}) : super(key: key);
            
@@ -271,7 +271,19 @@ class listbody extends StatefulWidget{
                 Share.share('Hey ${R.username} shared you File -: ${allFiles[index].filename} . and here\'s your Download Link : ${allFiles[index].url}', subject: 'Shared file from ${R.username}');
                 
               }else if(val==3){
-                
+                final response = await http.get(R.SERVERURL+'deletefile.php?id=${allFiles[index].id}');
+                if(response.body=="Record deleted successfully"){
+                toast(allFiles[index].filename+" is Deleted Succesfully");
+
+                 _removeSingleItem(index);
+
+                setState(() {
+                  getfiles(R.username);
+                });
+                }else{
+                  toast(response.body);
+
+                }
               }
           },
           itemBuilder: (context) => [
@@ -313,8 +325,8 @@ _launchURL(int index) async {
         _listKey.currentState.insertItem(insertIndex);
       }
 
-      void _removeSingleItem() {
-        int removeIndex = 2;
+      void _removeSingleItem(int ida) {
+        int removeIndex = ida;
         // Remove item from data list but keep copy to give to the animation.
         String removedItem = _data.removeAt(removeIndex);
         // This builder is just for showing the row while it is still
