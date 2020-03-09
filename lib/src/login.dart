@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'Manager.dart';
 import 'bloc.dart';
 import 'dart:async';
 import 'package:flutter/gestures.dart';
@@ -10,6 +11,8 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    
+    
     return centerCard();
   }
 
@@ -125,6 +128,7 @@ class Login extends StatelessWidget {
       action: () {
         ///Do something here
         //Navigator.of(context).pop();
+       getfiles("as");
         print("signup  slide"); //-------------signup here
       },
       label: Text(

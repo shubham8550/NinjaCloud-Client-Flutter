@@ -28,12 +28,16 @@ class Block extends Validators {
   submit(BuildContext context)async{
     final validUsername =_username.value;
     final validpassword= _password.value;
-     Navigator.pushNamed(context, '/home');
+    
     //print('------------'+validUsername+'---'+validpassword);
     if(await loginAccount(validUsername, validpassword)==true){
-      //print("Login Successsssssssssssssssssssssssss");
+      toast("Login Success");
+       //await getfiles(validUsername);
+       Navigator.pushNamed(context, '/home');
+      
+      
     }else{
-      //print("Login Fiellllldddd");
+      toast("Login Field");
     }
    
   }

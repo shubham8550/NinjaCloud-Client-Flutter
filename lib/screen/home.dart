@@ -10,6 +10,8 @@
 // ![](https://flutter.github.io/assets-for-api-docs/assets/material/scaffold_bottom_app_bar.png)
 
 import 'package:flutter/material.dart';
+import 'package:ninjacloud/filesdatamap.dart';
+import 'package:ninjacloud/resources/R.dart';
 import 'package:ninjacloud/src/Manager.dart';
 
 
@@ -98,6 +100,8 @@ class listbody extends StatefulWidget{
 
       @override
       Widget build(BuildContext context) {
+       
+       
         return Column(
           children: <Widget>[
             SizedBox(
@@ -105,13 +109,13 @@ class listbody extends StatefulWidget{
               child: AnimatedList(
                 // Give the Animated list the global key
                 key: _listKey,
-                initialItemCount: _data.length,
+                initialItemCount: R.totalfiles,
                 // Similar to ListView itemBuilder, but AnimatedList has
                 // an additional animation parameter.
                 itemBuilder: (context, index, animation) {
                   // Breaking the row widget out as a method so that we can
                   // share it with the _removeSingleItem() method.
-                  return _buildItem(_data[index], animation,index);
+                  return _buildItem((allFiles[index]).filename, animation,index);
                 },
               ),
             ),

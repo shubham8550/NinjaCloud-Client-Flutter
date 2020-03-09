@@ -24,10 +24,10 @@ class Validators {
 
   final validateUsername = StreamTransformer<String, String>.fromHandlers(
     handleData: (password, sink) {
-      if (password.length > 3) {
+      if (password.length > 1) {
         sink.add(password);
       } else {
-        sink.addError('Username must be at least 4 characters');
+        sink.addError('Username must be at least 2 characters');
       }
     },
   );
