@@ -19,6 +19,7 @@ import 'package:ninjacloud/resources/R.dart';
 import 'package:ninjacloud/src/Manager.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
 
@@ -267,6 +268,7 @@ class listbody extends StatefulWidget{
                 _launchURL(index);
                               
               }else if(val==2){
+                Share.share('Hey ${R.username} shared you File -: ${allFiles[index].filename} . and here\'s your Download Link : ${allFiles[index].url}', subject: 'Shared file from ${R.username}');
                 
               }else if(val==3){
                 
