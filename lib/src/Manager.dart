@@ -27,7 +27,7 @@ Future<bool> createAccount(String username,String password,String email) async{
     toast("Unable to connect server");
   }
 }
-Future<bool> getfiles(String username)async{
+Future getfiles(String username)async{
   final response = await http.get(R.SERVERURL+'getdata.php?u=$username');
 
   if (response.statusCode == 200) {
@@ -54,7 +54,7 @@ try {
   print(e);
 }
 
-    toast("data filled succcessfully --:${allFiles[1].url}");
+    //toast("data filled succcessfully --:${allFiles[1].url}");
     return true;
   } else {
     // If that response was not OK, throw an error.
