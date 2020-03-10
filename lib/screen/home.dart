@@ -227,9 +227,12 @@ class listbody extends StatefulWidget{
       // This is the animated row with the Card.
       Widget _buildItem(String item, Animation animation,int index) {
         return SizeTransition(
+          
           sizeFactor: animation,
           child: Card(
             child: ListTile(
+              
+              subtitle: Text(allFiles[index].filesize.toString()+" bytes"),
               trailing: menu_items(index),
               leading: Icon(geticon(index)),
               title: Text(
@@ -261,7 +264,7 @@ class listbody extends StatefulWidget{
      Widget menu_items(int index){
         return PopupMenuButton<int>(
           onSelected: (val) async {
-              toast('button ${val} selected of number ${index}');
+              //toast('button ${val} selected of number ${index}');
               if(val==1){
                 _launchURL(index);
                               
