@@ -1,13 +1,16 @@
 
 
+
+
 import 'package:flutter/material.dart';
-import 'Manager.dart';
-import 'bloc.dart';
+
 import 'dart:async';
 import 'package:flutter/gestures.dart';
+import 'package:ninjacloud/src/Manager.dart';
+import 'package:ninjacloud/src/bloc.dart';
 import 'package:slider_button/slider_button.dart';
 
-class Login extends StatelessWidget {
+class signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -27,12 +30,13 @@ class Login extends StatelessWidget {
           },
           child: Container(
             width: 300,
-            height: 400,
+            height: 450,
             margin: EdgeInsets.all(20),
             child: Column(
               children: <Widget>[
                 logoContener(),
                 usernameField(),
+                emailField(),
                 passwordField(),
                 Container(
                   margin: EdgeInsets.only(top: 25.0),
@@ -65,6 +69,22 @@ class Login extends StatelessWidget {
       },
     );
   }
+  Widget emailField() {
+    return StreamBuilder(
+      stream: bloc.email,
+      builder: (BuildContext, snapshot) {
+        return TextField(
+          
+          decoration: InputDecoration(
+            hintText: 'example@example.com',
+            labelText: 'Email',
+            errorText: snapshot.error,
+          ),
+          onChanged: bloc.changeEmail,
+        );
+      },
+    );
+  }
 
   Widget passwordField() {
     return StreamBuilder(
@@ -88,12 +108,12 @@ class Login extends StatelessWidget {
       stream: bloc.submitValid,
       builder: (BuildContext context, snapshot) {
         return RaisedButton(
-          child: Text('Login'),
+          child: Text('SignUp'),
           color: Colors.white70,
           onPressed: snapshot.hasData
               ? () {
-                  print("value submitting");
-                  bloc.submit(context);
+                  print("value submitting Signup");
+                  bloc.signupsubmit(context);
                 }
               : null,
         );
@@ -128,11 +148,11 @@ class Login extends StatelessWidget {
       action: () {
         ///Do something here
         //Navigator.of(context).pop();
-        Navigator.pushNamed(context, "/signup");
+          Navigator.pushNamed(context, "/"); 
         print("signup  slide"); //-------------signup here
       },
       label: Text(
-        "Go to Signup",
+        "Go to Login",
         style: TextStyle(
             color: Color(0xff4a4a4a),
             fontWeight: FontWeight.w500,

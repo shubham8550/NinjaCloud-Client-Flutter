@@ -25,10 +25,20 @@ class Block extends Validators {
   Function(String) get changeUsername => _username.sink.add;
 
   Function(String) get changepassword => _password.sink.add;
+  signupsubmit(BuildContext context) async {
+    toast("Please Wait");
+      if (await createAccount(_username.value,_password.value,_email.value) != null ) {
+        toast("Account Created SuccessFully ");
+        Navigator.pushNamed(context, "/");
+      } else {
+        toast("Unable to Create Account");
+      }
+  }
+
   submit(BuildContext context)async{
     final validUsername =_username.value;
     final validpassword= _password.value;
-    
+    toast("Please Wait");
     //print('------------'+validUsername+'---'+validpassword);
     if(await loginAccount(validUsername, validpassword)==true){
       toast("Login Success");
