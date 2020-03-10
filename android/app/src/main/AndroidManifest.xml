@@ -7,6 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="ninjacloud"
@@ -29,7 +30,24 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+     <provider
+     android:name="androidx.work.impl.WorkManagerInitializer"
+     android:authorities="${applicationId}.workmanager-init"
+     android:enabled="false"
+     android:exported="false" />
 
+    <provider
+        android:name="com.bluechilli.flutteruploader.FlutterUploaderInitializer"
+        android:authorities="${applicationId}.flutter-upload-init"
+        android:exported="false">
+        <!-- changes this number to configure the maximum number of concurrent tasks -->
+        <meta-data
+            android:name="com.bluechilli.flutterupload.MAX_CONCURRENT_TASKS"
+            android:value="3" />
+
+        <!-- changes this number to configure connection timeout for the upload http request -->
+        <meta-data android:name="com.bluechilli.flutteruploader.UPLOAD_CONNECTION_TIMEOUT_IN_SECONDS" android:value="3600" />
+    </provider>
     </application>
   
 </manifest>

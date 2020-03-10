@@ -124,14 +124,20 @@ class _MyStatefulWidgetState extends State<home_page> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+  final uploader = FlutterUploader();
   _file_picker() async {
      File file = await FilePicker.getFile();
      print(path.dirname(file.path));
         print((file.path));
      
 
-    final uploader = FlutterUploader();
+    uploaderr(file);
 
+ // print("Uploader stopped");
+  }
+
+  uploaderr(File file) async {
+    
     final taskId = await uploader.enqueue(
         url: "http://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
         files: [FileItem(filename:  path.basename(file.path), savedDir: path.dirname(file.path), fieldname:"uploadFile")], // required: list of files that you want to upload
@@ -139,21 +145,16 @@ class _MyStatefulWidgetState extends State<home_page> {
         headers: {"apikey": "api_123456", "userkey": "userkey_123456","u": R.username},
         data: {"u": R.username}, // any data you want to send in upload request
         showNotification: true, // send local notification (android only) for upload status
-        tag: "uploading ${path.basename(file.path)}"); // unique tag for upload task
-      int i=0;
+        tag: "Task ${path.basename(file.path)}"); // unique tag for upload task
+      //int i=0;
       final subscription = uploader.progress.listen((progress)  {
             print(progress.progress);
-            if(progress.progress==100 && i==0){
-            
+            // if(progress.progress==100 && i==0){
               
-              i++;
-                
-
-            }
+            // }
             }
           
       );
-  print("Uploader stopped");
   }
 
 
