@@ -139,7 +139,7 @@ class _MyStatefulWidgetState extends State<home_page> {
   uploaderr(File file) async {
     
     final taskId = await uploader.enqueue(
-        url: "http://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
+        url: "https://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
         files: [FileItem(filename:  path.basename(file.path), savedDir: path.dirname(file.path), fieldname:"uploadFile")], // required: list of files that you want to upload
         method: UploadMethod.POST, // HTTP method  (POST or PUT or PATCH)
         headers: {"apikey": "api_123456", "userkey": "userkey_123456","u": R.username},
