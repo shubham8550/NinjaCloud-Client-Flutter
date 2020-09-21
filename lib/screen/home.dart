@@ -47,7 +47,16 @@ class _MyStatefulWidgetState extends State<home_page> {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
+//    if(mounted)
+//      setState(() async {
+//        await getfiles(R.username);
+//        toast("refreshed");
+//        _refreshController.refreshCompleted();
+//
+//      });
+
     _refreshController.refreshCompleted();
+
   }
 
   void _onLoading() async{
@@ -55,10 +64,11 @@ class _MyStatefulWidgetState extends State<home_page> {
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     
-    if(mounted)
-    setState(() {
-         getfiles(R.username);
-    });
+//    if(mounted)
+//    setState(() async {
+//         await getfiles(R.username);
+//    });
+
     _refreshController.loadComplete();
   }
 
@@ -147,14 +157,15 @@ class _MyStatefulWidgetState extends State<home_page> {
         showNotification: true, // send local notification (android only) for upload status
         tag: "Task ${path.basename(file.path)}"); // unique tag for upload task
       //int i=0;
-      final subscription = uploader.progress.listen((progress)  {
-            print(progress.progress);
-            // if(progress.progress==100 && i==0){
-              
-            // }
-            }
-          
-      );
+
+    final subscription = uploader.result.listen((result) async {
+      //... code to handle result
+      await getfiles(R.username);
+      Navigator.pushNamed(context, "/home");
+      //_refreshController.requestRefresh();
+    }, onError: (ex, stacktrace) {
+      // ... code to handle error
+    });
   }
 
 
@@ -225,6 +236,7 @@ class listbody extends StatefulWidget{
               );
       }
 
+
       // This is the animated row with the Card.
       Widget _buildItem(String item, Animation animation,int index) {
         return SizeTransition(
@@ -272,12 +284,19 @@ class listbody extends StatefulWidget{
               }else if(val==2){
                 Share.share('Hey ${R.username} shared you File -: ${allFiles[index].filename} . and here\'s your Download Link : ${allFiles[index].url}', subject: 'Shared file from ${R.username}');
                 
+              }else if(val==4){
+                setState(() async {
+
+                      await getfiles(R.username);
+
+                });
               }else if(val==3){
                 final response = await http.get(R.SERVERURL+'deletefile.php?id=${allFiles[index].id}');
                 if(response.body=="Record deleted successfully"){
                 toast(allFiles[index].filename+" is Deleted Succesfully");
 
                  _removeSingleItem(index);
+
 
                 setState(() {
                   getfiles(R.username);
