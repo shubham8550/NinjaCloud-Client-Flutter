@@ -2,6 +2,9 @@
 
 A Cloud Storage Platform
 
+[Download Letast Build][http://dev.moryasolarz.com/appReleses/app-release.apk]
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
