@@ -10,19 +10,20 @@
 // ![](https://flutter.github.io/assets-for-api-docs/assets/material/scaffold_bottom_app_bar.png)
 
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:http/http.dart' as http;
 import 'package:ninjacloud/filesdatamap.dart';
 import 'package:ninjacloud/resources/R.dart';
+import 'package:ninjacloud/src/Bottom_Nav_Bar.dart';
 import 'package:ninjacloud/src/Manager.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:path/path.dart' as path;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
 
 class home_page extends StatefulWidget {
   home_page({Key key}) : super(key: key);
@@ -34,8 +35,7 @@ class home_page extends StatefulWidget {
 class _MyStatefulWidgetState extends State<home_page> {
   int _count = 0;
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+  RefreshController _refreshController = RefreshController(initialRefresh: true);
 
   void _onRefresh() async {
     // monitor network fetch
@@ -100,13 +100,17 @@ class _MyStatefulWidgetState extends State<home_page> {
         child: file_list(_count),
       ),
       //----body end
-      bottomNavigationBar: BottomAppBar(
+      /*bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Container(
           height: 50.0,
         ),
+      ),*/
+      bottomNavigationBar: Container(
+        height: 100.0,
+        child: getBottomNavBar(),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
           _file_picker();
 
@@ -117,7 +121,7 @@ class _MyStatefulWidgetState extends State<home_page> {
         tooltip: 'Increment Counter',
         child: Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,*/
     );
   }
 
@@ -134,8 +138,7 @@ class _MyStatefulWidgetState extends State<home_page> {
 
   uploaderr(File file) async {
     final taskId = await uploader.enqueue(
-        url:
-            "https://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
+        url: "https://dev.moryasolarz.com/ninja/upload.php", //required: url to upload to
         files: [
           FileItem(
               filename: path.basename(file.path),
@@ -143,14 +146,9 @@ class _MyStatefulWidgetState extends State<home_page> {
               fieldname: "uploadFile")
         ], // required: list of files that you want to upload
         method: UploadMethod.POST, // HTTP method  (POST or PUT or PATCH)
-        headers: {
-          "apikey": "api_123456",
-          "userkey": "userkey_123456",
-          "u": R.username
-        },
+        headers: {"apikey": "api_123456", "userkey": "userkey_123456", "u": R.username},
         data: {"u": R.username}, // any data you want to send in upload request
-        showNotification:
-            true, // send local notification (android only) for upload status
+        showNotification: true, // send local notification (android only) for upload status
         tag: "Task ${path.basename(file.path)}"); // unique tag for upload task
     //int i=0;
 
@@ -167,6 +165,68 @@ class _MyStatefulWidgetState extends State<home_page> {
   Widget file_list(int _count) {
     // return Text('You have pressed the button $_count times.');
     return listbody();
+  }
+
+  getBottomNavBar() {
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 1,
+          child: ClipPath(
+            clipper: NavBarClipper(),
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.teal, Colors.teal.shade900],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 40,
+          width: MediaQuery.of(context).size.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildFloatingItem1(),
+              SizedBox(width: 1),
+              SizedBox(width: 1),
+              SizedBox(width: 1),
+              SizedBox(width: 1),
+              SizedBox(width: 1),
+              _buildFloatingItem2(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildFloatingItem1() {
+    return FloatingActionButton(
+      heroTag: null,
+      onPressed: () {
+        _file_picker();
+      },
+      tooltip: 'Increment Counter',
+      child: Icon(Icons.add),
+    );
+  }
+
+  _buildFloatingItem2() {
+    return FloatingActionButton(
+      heroTag: null,
+      onPressed: () {
+        toast("Under Development");
+      },
+      tooltip: 'Under Development',
+      child: Icon(Icons.construction),
+    );
   }
 }
 
@@ -239,8 +299,7 @@ class BodyLayoutState extends State<listbody> {
     print("DB" + myUrl);
     return Image.network(
       myUrl,
-      loadingBuilder: (BuildContext context, Widget child,
-          ImageChunkEvent loadingProgress) {
+      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
         if (loadingProgress == null) return child;
         return CircularProgressIndicator();
       },
@@ -282,8 +341,7 @@ class BodyLayoutState extends State<listbody> {
             await getfiles(R.username);
           });
         } else if (val == 3) {
-          final response = await http
-              .get(R.SERVERURL + 'deletefile.php?id=${allFiles[index].id}');
+          final response = await http.get(R.SERVERURL + 'deletefile.php?id=${allFiles[index].id}');
           if (response.body == "Record deleted successfully") {
             toast(allFiles[index].filename + " is Deleted Succesfully");
 
